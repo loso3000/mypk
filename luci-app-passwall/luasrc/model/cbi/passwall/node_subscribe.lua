@@ -19,48 +19,6 @@ o = s:option(Flag, "auto_update_subscribe",
 o.default = 0
 o.rmempty = false
 
-
-
----- Auto Ping
-o = s:option(Flag, "auto_ping", translate("Auto Ping"),
-             translate("This will automatically ping the node for latency"))
-o.default = 1
-
----- Use TCP Detection delay
-o = s:option(Flag, "use_tcping", translate("Use TCP Detection delay"),
-             translate("This will use tcping replace ping detection of node"))
-o.default = 1
-
----- Concise display nodes
-o = s:option(Flag, "compact_display_nodes", translate("Concise display nodes"))
-o.default = 0
-
----- Show Add Mode
-o = s:option(Flag, "show_add_mode", translate("Show Add Mode"))
-o.default = 1
-
----- Show group
-o = s:option(Flag, "show_group", translate("Show Group"))
-o.default = 1
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ---- Week update rules
 o = s:option(ListValue, "week_update_subscribe", translate("Week update rules"))
 o:value(7, translate("Every day"))
@@ -81,7 +39,7 @@ o.inputstyle = "apply"
 function o.write(e, e)
     luci.sys.call(
         "lua /usr/share/passwall/subscribe.lua start log > /dev/null 2>&1 &")
-    luci.http.redirect(luci.dispatcher.build_url("admin", "vpn", "passwall",
+    luci.http.redirect(luci.dispatcher.build_url("admin", "Internet", "passwall",
                                                  "log"))
 end
 -- [[ Add the node via the link ]]--
@@ -93,9 +51,13 @@ o.inputstyle = "remove"
 function o.write(e, e)
     luci.sys.call(
         "lua /usr/share/passwall/subscribe.lua truncate log > /dev/null 2>&1 &")
-    luci.http.redirect(luci.dispatcher.build_url("admin", "vpn", "passwall",
+    luci.http.redirect(luci.dispatcher.build_url("admin", "Internet", "passwall",
                                                  "log"))
 end
+
+filter_enabled = s:option(Flag, "filter_enabled", translate("Filter keyword switch"), translate("When checked, below options can only be take effect."))
+o.default = 1
+o.rmempty = false
 
 filter_keyword = s:option(DynamicList, "filter_keyword", translate("Filter keyword"))
     
@@ -122,9 +84,6 @@ o.rmempty = false
 o = s:option(Value, "url", translate("Subscribe URL"))
 o.width = "auto"
 o.rmempty = false
--- [[ Other Settings ]]--
-s = m:section(TypedSection, "global_other")
-s.anonymous = true
 
 
 
